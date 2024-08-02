@@ -7,9 +7,12 @@
 import { fork } from "node:child_process";
 import { writeFileSync } from "node:fs";
 
+const version = (await import("./package.json", { with: { type: "json" } }))
+  .default.version;
+
 const server = fork("server.js", { detached: true });
 
-const port = await new Promise(resolve, () => {
+const port = await new Promise((resolve) => {
   server.on("message", ({ port }) => resolve(port));
 });
 

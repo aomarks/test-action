@@ -29,9 +29,6 @@ const server = http.createServer((req, res) => {
   }
 });
 
-const version = (await import("./package.json", { with: { type: "json" } }))
-  .default.version;
-
 const port = 9999;
 
 server.listen(port, "127.0.0.1", () => {
