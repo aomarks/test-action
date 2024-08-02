@@ -54,9 +54,6 @@ const outputFile = process.env.GITHUB_OUTPUT;
 appendFileSync(outputFile, `sample_output=This is a sample value\n`);
 
 appendFileSync(
-  join(
-    process.env.RUNNER_TEMP,
-    ".wireit-github-cache-info",
-    JSON.stringify({ ACTIONS_CACHE_URL, ACTIONS_RUNTIME_TOKEN })
-  )
+  join(process.env.RUNNER_TEMP, ".wireit-github-cache-info"),
+  JSON.stringify({ ACTIONS_CACHE_URL, ACTIONS_RUNTIME_TOKEN })
 );
