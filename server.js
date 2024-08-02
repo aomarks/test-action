@@ -10,8 +10,13 @@ import packageJson from "./package.json" with { type: "json" };
 const response = JSON.stringify({
   version: packageJson.version,
   caching: {
+    // These environment variables are automatically provided to invoked
+    // workflows like this one, but not to regular "run" steps, so we need to
+    // serve them for subsequent Wireit processes.
     github: {
+      // URL for the GitHub Actions cache service.
       ACTIONS_CACHE_URL: process.env.ACTIONS_CACHE_URL,
+      // A secret token for authenticating to the GitHub Actions cache service.
       ACTIONS_RUNTIME_TOKEN: process.env.ACTIONS_RUNTIME_TOKEN,
     },
   },
@@ -26,23 +31,36 @@ function randIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-const MAX_PORT_ATTEMPTS = 4;
-
-let result;
-for (let i = 0; result === undefined && i < MAX_PORT_ATTEMPTS; i++) {
+let port;
+const MAX_TRIES = 4;
+for (let i = 0; port === undefined && i < MAX_TRIES; i++) {
   await new Promise((resolve) => {
-    const port = randIntInclusive(49152, 65535);
-    server.listen(port, () => {
-      result = { status: "listening", port };
-      resolve();
-    });
-    server.once("error", ({ code }) => {
-      if (code !== "EADDRINUSE") {
-        result = { status: "error", code };
-      }
+    const candidate = randIntInclusive(49152, 65535);
+    server.once("error", resolve);
+    server.listen(candidate, () => {
+      port = candidate;
       resolve();
     });
   });
 }
 
-process.send(result);
+if (!port) {
+  process.send(1);
+  process.exit(1);
+}
+
+// Writing to this file sets environment variables for all subsequent steps in
+// the user's workflow. Reference:
+// https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
+writeFileSync(
+  process.env.GITHUB_ENV,
+  `
+WIREIT_CACHE=github
+WIREIT_CACHE_GITHUB_SERVER_PORT=${port}
+`
+);
+
+process.send(0);
+
+// The server now continues listening until this process is automatically killed
+// at the end of the run.
