@@ -1,3 +1,5 @@
+name: Reusable
+
 on:
   workflow_call:
     outputs:
@@ -7,6 +9,7 @@ on:
 
 jobs:
   main:
+    runs-on: ubuntu-latest
     outputs:
       token: ${{ steps.set-token.outputs.token }}
     steps:
