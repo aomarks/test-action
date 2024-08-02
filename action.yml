@@ -1,18 +1,9 @@
-name: Reusable
-
-on:
-  workflow_call:
-    outputs:
-      token:
-        description: "A token"
-        value: ${{ jobs.main.outputs.token }}
-
-jobs:
-  main:
-    runs-on: ubuntu-latest
-    outputs:
-      token: ${{ steps.set-token.outputs.token }}
-    steps:
-      - name: Set token
-        id: set-token
-        run: echo "token=somesecret" >> $GITHUB_OUTPUT
+name: "wireit-setup-github-actions-caching"
+author: "Google LLC"
+description: "Enables Wireit's GitHub Actions caching mode and exposes required environment variables"
+outputs:
+  sample_output:
+    description: "A sample output value"
+runs:
+  using: "node20"
+  main: "index.js"

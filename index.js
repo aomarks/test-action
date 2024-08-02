@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {appendFileSync} from 'fs';
+import { appendFileSync } from "fs";
 
 const requireEnv = (name) => {
   const value = process.env[name];
@@ -17,7 +17,7 @@ const requireEnv = (name) => {
 // Writing to this file sets environment variables for all subsequent steps in
 // the user's workflow. Reference:
 // https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
-const GITHUB_ENV = requireEnv('GITHUB_ENV');
+const GITHUB_ENV = requireEnv("GITHUB_ENV");
 
 // The next 2 environment variables are automatically provided to custom
 // workflows like this one, but not to regular "run" steps. By writing these
@@ -25,7 +25,7 @@ const GITHUB_ENV = requireEnv('GITHUB_ENV');
 // steps, and hence to all Wireit invocations.
 
 // URL for the GitHub Actions cache service.
-const ACTIONS_CACHE_URL = requireEnv('ACTIONS_CACHE_URL');
+const ACTIONS_CACHE_URL = requireEnv("ACTIONS_CACHE_URL");
 
 // A secret token for authenticating to the GitHub Actions cache service.
 //
@@ -38,7 +38,7 @@ const ACTIONS_CACHE_URL = requireEnv('ACTIONS_CACHE_URL');
 // other issues. In particular, we could potentially start an HTTP server in
 // this action to act as a proxy for this token so that it doesn't need to be
 // shared to all workflow steps.
-const ACTIONS_RUNTIME_TOKEN = requireEnv('ACTIONS_RUNTIME_TOKEN');
+const ACTIONS_RUNTIME_TOKEN = requireEnv("ACTIONS_RUNTIME_TOKEN");
 
 appendFileSync(
   GITHUB_ENV,
@@ -48,3 +48,6 @@ ACTIONS_CACHE_URL=${ACTIONS_CACHE_URL}
 ACTIONS_RUNTIME_TOKEN=${ACTIONS_RUNTIME_TOKEN}
 `
 );
+
+const outputFile = process.env.GITHUB_OUTPUT;
+appendFileSync(outputFile, `sample_output=This is a sample value\n`);
