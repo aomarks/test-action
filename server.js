@@ -5,10 +5,10 @@
  */
 
 import http from "node:http";
-import { version } from "./package.json" with { type: "json" };
+import packageJson from "./package.json" with { type: "json" };
 
 const response = JSON.stringify({
-  version,
+  version: packageJson.version,
   caching: {
     github: {
       ACTIONS_CACHE_URL: process.env.ACTIONS_CACHE_URL,
