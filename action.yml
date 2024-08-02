@@ -4,4 +4,7 @@ description: "Enables Wireit's GitHub Actions caching mode and exposes required 
 outputs:
   token:
     description: "The generated secret token"
-    value: supersecret
+    value: secretpotato
+runs:
+  using: "node20"
+  main: "index.js"
