@@ -28,6 +28,6 @@ writeFileSync(
   process.env.GITHUB_ENV,
   `
 WIREIT_CACHE=github
-WIREIT_CACHE_GITHUB_SERVER_PORT=port
+WIREIT_CACHE_GITHUB_SERVER_PORT=${port}
 `
 );
