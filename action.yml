@@ -1,15 +1,15 @@
-name: "wireit-setup-github-actions-caching"
-author: "Google LLC"
-description: "Enables Wireit's GitHub Actions caching mode and exposes required environment variables"
-outputs:
-  token:
-    description: "The generated secret token"
-    value: secretpotato
-runs:
-  using: "node20"
-  main: "index.js"
 on:
   workflow_call:
     outputs:
       token:
-        value: secretpotato
+        description: "A token"
+        value: ${{ jobs.main.outputs.token }}
+
+jobs:
+  main:
+    outputs:
+      token: ${{ steps.set-token.outputs.token }}
+    steps:
+      - name: Set token
+        id: set-token
+        run: echo "token=somesecret" >> $GITHUB_OUTPUT
