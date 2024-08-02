@@ -5,6 +5,7 @@
  */
 
 import { appendFileSync } from "fs";
+import { join } from "path";
 
 const requireEnv = (name) => {
   const value = process.env[name];
@@ -52,4 +53,10 @@ ACTIONS_RUNTIME_TOKEN=${ACTIONS_RUNTIME_TOKEN}
 const outputFile = process.env.GITHUB_OUTPUT;
 appendFileSync(outputFile, `sample_output=This is a sample value\n`);
 
-appendFileSync("foo", "hello");
+appendFileSync(
+  join(
+    process.env.RUNNER_TEMP,
+    ".wireit-github-cache-info",
+    JSON.stringify({ ACTIONS_CACHE_URL, ACTIONS_RUNTIME_TOKEN })
+  )
+);
