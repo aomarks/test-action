@@ -65,3 +65,5 @@ process.send(0);
 
 // The server now continues listening until this process is automatically killed
 // at the end of the run.
+
+console.log("listening!");
