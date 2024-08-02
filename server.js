@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { writeFileSync } from "node:fs";
 import http from "node:http";
 import packageJson from "./package.json" with { type: "json" };
 
