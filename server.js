@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { writeFileSync } from "node:fs";
 import http from "node:http";
 
 const response = JSON.stringify(
@@ -36,12 +35,5 @@ const version = (await import("./package.json", { with: { type: "json" } }))
 const port = 9999;
 
 server.listen(port, "127.0.0.1", () => {
-  process.send("ready");
-  writeFileSync(
-    process.env.GITHUB_ENV,
-    `
-WIREIT_CACHE=github
-WIREIT_GITHUB_SERVER=${JSON.stringify({ version, port })}
-`
-  );
+  process.send({ port });
 });

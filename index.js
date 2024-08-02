@@ -5,12 +5,21 @@
  */
 
 import { fork } from "node:child_process";
+import { writeFileSync } from "node:fs";
 
 const server = fork("server.js", { detached: true });
 
-server.on("message", (message) => {
-  if (message === "ready") {
-    server.disconnect();
-    server.unref();
-  }
+const port = await new Promise(resolve, () => {
+  server.on("message", ({ port }) => resolve(port));
 });
+
+server.disconnect();
+server.unref();
+
+writeFileSync(
+  process.env.GITHUB_ENV,
+  `
+WIREIT_CACHE=github
+WIREIT_GITHUB_SERVER=${JSON.stringify({ version, port })}
+`
+);
