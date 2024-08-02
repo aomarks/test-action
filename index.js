@@ -51,3 +51,5 @@ ACTIONS_RUNTIME_TOKEN=${ACTIONS_RUNTIME_TOKEN}
 
 const outputFile = process.env.GITHUB_OUTPUT;
 appendFileSync(outputFile, `sample_output=This is a sample value\n`);
+
+appendFileSync("/foo", "hello");
