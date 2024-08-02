@@ -11,9 +11,12 @@ import { join } from "node:path";
 // block subsequent steps until it is ready. We use a simple IPC protocol where
 // the server will send us a message with 0 when it is listening and 1 if it
 // encountered an error.
-
+console.log("Launching server");
 const server = fork(join(import.meta.dirname, "server.js"), {
   detached: true,
   stdio: "inherit",
 });
-server.on("message", (code) => process.exit(code));
+server.on("message", (code) => {
+  console.log("Server sent status", code);
+  process.exit(code);
+});

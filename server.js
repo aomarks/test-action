@@ -37,6 +37,7 @@ const MAX_TRIES = 4;
 for (let i = 0; port === undefined && i < MAX_TRIES; i++) {
   await new Promise((resolve) => {
     const candidate = randIntInclusive(49152, 65535);
+    console.log(`Trying port ${candidate}`);
     server.once("error", resolve);
     server.listen(candidate, () => {
       port = candidate;
@@ -46,24 +47,21 @@ for (let i = 0; port === undefined && i < MAX_TRIES; i++) {
 }
 
 if (!port) {
-  process.send(1);
-  process.exit(1);
-}
+  console.error("Could not find a free port");
+  process.send(1, () => process.exit(1));
+} else {
+  console.log(`Listening on port ${port}`);
 
-// Writing to this file sets environment variables for all subsequent steps in
-// the user's workflow. Reference:
-// https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
-writeFileSync(
-  process.env.GITHUB_ENV,
-  `
+  // Writing to this file sets environment variables for all subsequent steps in
+  // the user's workflow. Reference:
+  // https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
+  writeFileSync(
+    process.env.GITHUB_ENV,
+    `
 WIREIT_CACHE=github
 WIREIT_CACHE_GITHUB_SERVER_PORT=${port}
 `
-);
+  );
 
-process.send(0);
-
-// The server now continues listening until this process is automatically killed
-// at the end of the run.
-
-console.log("listening!");
+  process.send(0);
+}
