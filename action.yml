@@ -8,3 +8,8 @@ outputs:
 runs:
   using: "node20"
   main: "index.js"
+on:
+  workflow_call:
+    outputs:
+      token:
+        value: secretpotato
