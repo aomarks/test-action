@@ -6,8 +6,9 @@
 
 import { fork } from "node:child_process";
 import { writeFileSync } from "node:fs";
+import { join } from "node:path";
 
-const server = fork("./server.js", { detached: true });
+const server = fork(join(import.meta.dirname, "server.js"), { detached: true });
 
 const port = await new Promise((resolve) => {
   server.on("message", ({ port }) => resolve(port));
